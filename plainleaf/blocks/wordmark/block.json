@@ -1,0 +1,44 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "plainleaf/wordmark",
+	"version": "1.0.0",
+	"title": "Site logo or title",
+	"category": "theme",
+	"icon": "editor-textcolor",
+	"description": "Your logo, the site title, or both, set once in Appearance > Theme settings. On phones it can show a compact logo instead.",
+	"keywords": [
+		"logo",
+		"brand",
+		"site title"
+	],
+	"textdomain": "plainleaf",
+	"attributes": {
+		"isLink": {
+			"type": "boolean",
+			"default": true
+		},
+		"size": {
+			"type": "string",
+			"enum": [
+				"header",
+				"footer"
+			],
+			"default": "header"
+		},
+		"showIcon": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"supports": {
+		"html": false,
+		"multiple": true,
+		"reusable": false,
+		"spacing": {
+			"margin": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

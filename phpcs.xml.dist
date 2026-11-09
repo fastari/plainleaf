@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<ruleset name="Plainleaf">
+	<description>WordPress coding standards with the security sniffs, for the Plainleaf theme.</description>
+
+	<file>./plainleaf</file>
+	<file>./dev</file>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/assets/fonts/*</exclude-pattern>
+	<exclude-pattern>*.js</exclude-pattern>
+	<exclude-pattern>*.css</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<config name="minimum_wp_version" value="6.9"/>
+	<config name="testVersion" value="7.4-"/>
+
+	<!-- Security: escaping, sanitizing, nonces, safe redirects, prepared SQL. These must pass. -->
+	<rule ref="WordPress.Security"/>
+	<rule ref="WordPress.DB.PreparedSQL"/>
+	<rule ref="WordPress.DB.PreparedSQLPlaceholders"/>
+
+	<!-- Coding standards. -->
+	<rule ref="WordPress-Extra">
+		<!-- Theme files follow WordPress template naming, not class file naming. -->
+		<exclude name="WordPress.Files.FileName"/>
+		<!-- Block attribute JSON in patterns is easier to read on one line. -->
+		<exclude name="Generic.WhiteSpace.ScopeIndent"/>
+		<exclude name="Generic.Formatting.MultipleStatementAlignment"/>
+		<exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
+		<exclude name="Universal.WhiteSpace.PrecisionAlignment"/>
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="plainleaf"/>
+			</property>
+		</properties>
+	</rule>
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="plainleaf"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="PHPCompatibilityWP"/>
+
+	<!-- The dev seed and local helpers never ship; only security rules matter there. -->
+	<rule ref="WordPress.WP.AlternativeFunctions">
+		<exclude-pattern>*/dev/*</exclude-pattern>
+	</rule>
+</ruleset>

@@ -1,0 +1,35 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "plainleaf/newsletter-form",
+	"version": "0.1.6",
+	"title": "Newsletter form",
+	"category": "theme",
+	"icon": "email",
+	"description": "The newsletter signup form. Connect your newsletter tool once in Appearance > Theme settings and every form on the site uses it.",
+	"keywords": [
+		"newsletter",
+		"signup",
+		"subscribe",
+		"email"
+	],
+	"textdomain": "plainleaf",
+	"supports": {
+		"html": false,
+		"spacing": {
+			"margin": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"enum": [
+				"default",
+				"hero"
+			],
+			"default": "default"
+		}
+	}
+}

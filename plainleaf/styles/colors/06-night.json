@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Night",
+	"description": "A neutral dark palette.",
+	"settings": {
+		"color": {
+			"palette": [
+				{ "slug": "base", "name": "Background", "color": "#161616" },
+				{ "slug": "surface", "name": "Surface (boxes, cards)", "color": "#222222" },
+				{ "slug": "contrast", "name": "Text", "color": "#EDEDEA" },
+				{ "slug": "muted", "name": "Muted text", "color": "#ABABA6" },
+				{ "slug": "line", "name": "Divider line", "color": "#34342F" },
+				{ "slug": "brand", "name": "Brand (hero band, badges)", "color": "#2A2A27" },
+				{ "slug": "brand-deep", "name": "Brand deep (large text, lines)", "color": "#9A9A94" },
+				{ "slug": "brand-ink", "name": "Brand ink (small brand text)", "color": "#C9C9C3" },
+				{ "slug": "on-brand", "name": "Text on brand", "color": "#EDEDEA" },
+				{ "slug": "accent", "name": "Accent (buttons)", "color": "#EDEDEA" },
+				{ "slug": "accent-hover", "name": "Accent hover", "color": "#FFFFFF" },
+				{ "slug": "on-accent", "name": "Text on accent", "color": "#161616" }
+			]
+		}
+	}
+}

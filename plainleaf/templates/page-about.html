@@ -1,0 +1,29 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|70"},"margin":{"top":"0"}}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group" style="margin-top:0;padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--70)">
+	<!-- wp:columns {"align":"wide","className":"pl-about","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60","top":"var:preset|spacing|50"}}}} -->
+	<div class="wp-block-columns alignwide pl-about">
+		<!-- wp:column {"width":"60%","style":{"spacing":{"blockGap":"var:preset|spacing|40"}}} -->
+		<div class="wp-block-column" style="flex-basis:60%">
+			<!-- wp:post-title {"level":1} /-->
+			<!-- wp:post-content {"layout":{"type":"default"}} /-->
+		</div>
+		<!-- /wp:column -->
+		<!-- wp:column {"width":"40%","className":"pl-about__photo"} -->
+		<div class="wp-block-column pl-about__photo" style="flex-basis:40%">
+			<!-- wp:plainleaf/author-photo {"size":320,"className":"is-portrait"} /-->
+		</div>
+		<!-- /wp:column -->
+	</div>
+	<!-- /wp:columns -->
+
+	<!-- wp:group {"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"46rem"}} -->
+	<div class="wp-block-group alignwide" style="margin-top:var(--wp--preset--spacing--60)">
+		<!-- wp:template-part {"slug":"newsletter-signup"} /-->
+	</div>
+	<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

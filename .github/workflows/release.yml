@@ -1,0 +1,105 @@
+# Release automatically when theme changes reach main.
+#
+# On every push to main that changes plainleaf/ (a merged pull request):
+#   1. Pick the bump from the merged PR's label: release:patch, release:minor or
+#      release:major (the required "Release label" check makes sure there is
+#      exactly one). release:skip means no release for that PR.
+#   2. Work out the next version from the vX.Y.Z tags (bin/next-version.sh).
+#      With no tags yet, the first release uses the Version: in style.css.
+#   3. Stamp that version into the build (bin/stamp-version.sh), build the zip
+#      with the usual checks (bin/build.sh), and publish release vX.Y.Z with
+#      plainleaf-X.Y.Z.zip and notes generated from the merged PRs.
+# Sites running Plainleaf then find the update through inc/updater.php.
+#
+# Changes outside plainleaf/ (docs, CI, tooling, Dependabot) don't release.
+# Run it by hand from the Actions tab to release with a chosen bump.
+# Nothing is committed back to main: the tags are the source of truth.
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths: ['plainleaf/**']
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version bump
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+
+permissions:
+  contents: write
+  pull-requests: read
+
+# One release at a time, in order.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0 # all tags, to work out the next version
+          persist-credentials: false
+
+      - name: Choose the version bump
+        id: bump
+        env:
+          MANUAL_BUMP: ${{ inputs.bump }}
+        run: |
+          if [ -n "$MANUAL_BUMP" ]; then
+            echo "bump=$MANUAL_BUMP" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          labels="$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq '.[0].labels[].name' 2>/dev/null || true)"
+          if grep -qx 'release:skip' <<< "$labels"; then
+            echo "The merged PR is labelled release:skip; no release."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          elif grep -qx 'release:major' <<< "$labels"; then
+            echo "bump=major" >> "$GITHUB_OUTPUT"
+          elif grep -qx 'release:minor' <<< "$labels"; then
+            echo "bump=minor" >> "$GITHUB_OUTPUT"
+          elif grep -qx 'release:patch' <<< "$labels"; then
+            echo "bump=patch" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::No release label on the merged PR (release:patch, release:minor, release:major or release:skip). Run this workflow by hand to release."
+            exit 1
+          fi
+
+      - name: Work out the next version
+        if: steps.bump.outputs.skip != 'true'
+        id: version
+        env:
+          BUMP: ${{ steps.bump.outputs.bump }}
+        run: |
+          version="$(bash bin/next-version.sh "$BUMP")"
+          if gh release view "v$version" >/dev/null 2>&1; then
+            echo "v$version already exists; nothing to do." >&2
+            exit 1
+          fi
+          echo "Releasing v$version ($BUMP)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Build the theme zip
+        if: steps.bump.outputs.skip != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          bash bin/stamp-version.sh "$VERSION"
+          bash bin/build.sh
+
+      - name: Publish the release
+        if: steps.bump.outputs.skip != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "v$VERSION" "dist/plainleaf-$VERSION.zip" \
+            --title "v$VERSION" \
+            --generate-notes \
+            --target "$GITHUB_SHA"

@@ -1,0 +1,32 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "Plainleaf local dev",
+		"description": "Activates the theme and seeds pages, demo topics and stub posts.",
+		"author": "Fastari"
+	},
+	"preferredVersions": {
+		"php": "8.3",
+		"wp": "7.1"
+	},
+	"landingPage": "/",
+	"login": true,
+	"steps": [
+		{
+			"step": "activateTheme",
+			"themeFolderName": "plainleaf"
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/plainleaf-seed.php",
+			"data": {
+				"resource": "bundled",
+				"path": "/dev/seed.php"
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require '/wordpress/wp-load.php'; require '/wordpress/wp-content/plainleaf-seed.php';"
+		}
+	]
+}

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.wp-env/
+__pycache__/
+*.pyc
+
+# Local text-to-speech environment (bin/make-audio)
+.venv-audio/
+vendor/

@@ -1,0 +1,48 @@
+# Every pull request that changes the theme (plainleaf/) must say what kind of
+# release merging it makes, with exactly one label:
+#
+#   release:patch  fixes and small tweaks          1.2.3 -> 1.2.4
+#   release:minor  new features or settings         1.2.3 -> 1.3.0
+#   release:major  changes how existing sites look  1.2.3 -> 2.0.0
+#   release:skip   theme files changed, no release
+#
+# Without one, this check fails and the PR can't be merged (it's a required
+# check on main). PRs that only touch docs, CI or tooling never release and pass
+# without a label. The Release workflow reads the same label after the merge.
+name: Release label
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: release-label-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  release-label:
+    name: Release label
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check for exactly one release label
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          LABELS_JSON: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+        run: |
+          theme_files="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" --paginate --jq '.[].filename' | grep -c '^plainleaf/' || true)"
+          if [ "$theme_files" = "0" ]; then
+            echo "No theme files changed, so this PR won't release. No label needed."
+            exit 0
+          fi
+          release_labels="$(jq -r '.[]' <<< "$LABELS_JSON" | grep -E '^release:(patch|minor|major|skip)$' || true)"
+          count="$(grep -c . <<< "$release_labels" || true)"
+          if [ "$count" != "1" ]; then
+            echo "::error::This PR changes the theme. Add exactly one label: release:patch, release:minor, release:major or release:skip (found ${count})."
+            exit 1
+          fi
+          echo "Merging this PR will make a ${release_labels#release:} release."
