@@ -1,0 +1,27 @@
+# Weekly update pull requests for the GitHub Actions, npm and Composer tooling.
+# Security alerts are turned on in the repository settings (Settings > Code security).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      npm-tooling:
+        patterns: ['*']
+
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      composer-tooling:
+        patterns: ['*']

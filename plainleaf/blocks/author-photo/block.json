@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "plainleaf/author-photo",
+	"version": "0.1.6",
+	"title": "Author photo",
+	"category": "theme",
+	"icon": "admin-users",
+	"description": "The author's photo, round. Choose it once in Appearance > Theme settings and it updates everywhere. Shows nothing until a photo is chosen.",
+	"keywords": [ "author", "photo", "avatar", "byline" ],
+	"textdomain": "plainleaf",
+	"attributes": {
+		"size": {
+			"type": "number",
+			"default": 56
+		}
+	},
+	"supports": {
+		"html": false,
+		"spacing": {
+			"margin": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

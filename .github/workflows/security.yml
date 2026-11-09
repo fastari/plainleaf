@@ -1,0 +1,96 @@
+# Security checks on every pull request, on pushes to main, and every Monday.
+#
+#   PHPCS  WordPress Coding Standards with the security sniffs (escaping,
+#          sanitizing, nonces, safe redirects, prepared SQL). Config: phpcs.xml.dist
+#   Semgrep  PHP, security-audit and secrets rules from the Semgrep Registry.
+#          Results also go to the Security tab (code scanning) on public repos.
+#   Brand guard  Fails if any file matches the private BRAND_DENYLIST secret
+#          (names and details of private sites that must never land here).
+#          Skipped when the secret isn't available, such as PRs from forks.
+#
+# None of these need an account or a personal token. Every action and image is
+# pinned to an exact commit or digest (Dependabot proposes updates as PRs), and
+# only GitHub's own actions and Semgrep's official image are used.
+name: Security
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phpcs:
+    name: PHPCS (WordPress standards)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      # PHP 8.3 and Composer come with GitHub's Ubuntu 24.04 runner image,
+      # so no third-party setup action is needed.
+      - name: Show PHP and Composer versions
+        run: php -v && composer --version
+
+      - name: Install the coding standards
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run PHPCS
+        run: vendor/bin/phpcs --report=full
+
+  semgrep:
+    name: Semgrep
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    container:
+      image: semgrep/semgrep:1.95.0@sha256:30e6afa99ebd8e7b4115d4904898108eb4bf77025819e9263f09cf14e6f6e549
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Run Semgrep
+        env:
+          SEMGREP_SEND_METRICS: 'off'
+        run: >
+          semgrep scan
+          --config p/php
+          --config p/security-audit
+          --config p/secrets
+          --metrics=off
+          --error
+          --sarif --output semgrep.sarif
+          --exclude node_modules --exclude vendor --exclude dist
+
+      - name: Send results to the Security tab
+        if: always() && github.event.repository.private == false
+        uses: github/codeql-action/upload-sarif@4bfa242aa49c5f7c6770b98670d354a7dfac05f8 # v3.39.1
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
+
+  brand-guard:
+    name: Brand guard
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Check for private names and details
+        env:
+          BRAND_DENYLIST: ${{ secrets.BRAND_DENYLIST }}
+        run: bash bin/check-brand.sh

@@ -1,0 +1,65 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Clean",
+	"description": "Manrope everywhere.",
+	"settings": {
+		"typography": {
+			"fontFamilies": [
+				{
+					"slug": "display",
+					"name": "Manrope (titles)",
+					"fontFamily": "Manrope, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Manrope",
+							"fontStyle": "normal",
+							"fontWeight": "200 800",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/manrope/Manrope-Variable.woff2"
+							]
+						}
+					]
+				},
+				{
+					"slug": "sans",
+					"name": "Manrope (interface)",
+					"fontFamily": "Manrope, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Manrope",
+							"fontStyle": "normal",
+							"fontWeight": "200 800",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/manrope/Manrope-Variable.woff2"
+							]
+						}
+					]
+				},
+				{
+					"slug": "serif",
+					"name": "Manrope (reading)",
+					"fontFamily": "Manrope, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Manrope",
+							"fontStyle": "normal",
+							"fontWeight": "200 800",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/manrope/Manrope-Variable.woff2"
+							]
+						}
+					]
+				},
+				{
+					"slug": "mono",
+					"name": "System monospace",
+					"fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace"
+				}
+			]
+		}
+	}
+}

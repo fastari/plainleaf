@@ -1,0 +1,72 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Nautical",
+	"description": "Canva: Timeless and nautical (#00293C #1E656D #F1F3CE #F62A00)",
+	"settings": {
+		"color": {
+			"palette": [
+				{
+					"slug": "base",
+					"name": "Background",
+					"color": "#FCFCF5"
+				},
+				{
+					"slug": "surface",
+					"name": "Surface (boxes, cards)",
+					"color": "#F1F3CE"
+				},
+				{
+					"slug": "contrast",
+					"name": "Text",
+					"color": "#00293C"
+				},
+				{
+					"slug": "muted",
+					"name": "Muted text",
+					"color": "#3B5763"
+				},
+				{
+					"slug": "line",
+					"name": "Divider line",
+					"color": "#DDE0C4"
+				},
+				{
+					"slug": "brand",
+					"name": "Brand (hero band, badges)",
+					"color": "#1E656D"
+				},
+				{
+					"slug": "brand-deep",
+					"name": "Brand deep (large text, lines)",
+					"color": "#1E656D"
+				},
+				{
+					"slug": "brand-ink",
+					"name": "Brand ink (small brand text)",
+					"color": "#1E656D"
+				},
+				{
+					"slug": "on-brand",
+					"name": "Text on brand",
+					"color": "#FFFFFF"
+				},
+				{
+					"slug": "accent",
+					"name": "Accent (buttons)",
+					"color": "#E22600"
+				},
+				{
+					"slug": "accent-hover",
+					"name": "Accent hover",
+					"color": "#C92200"
+				},
+				{
+					"slug": "on-accent",
+					"name": "Text on accent",
+					"color": "#FFFFFF"
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,22 @@
+{
+	"name": "plainleaf",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Development tooling for the Plainleaf WordPress block theme.",
+	"license": "GPL-2.0-or-later",
+	"type": "module",
+	"engines": {
+		"node": ">=20.18"
+	},
+	"scripts": {
+		"dev": "wp-playground-cli server --port=9400 --wp=7.1 --php=8.3 --blueprint=./blueprint.json --blueprint-may-read-adjacent-files --mount=./plainleaf:/wordpress/wp-content/themes/plainleaf --mount=./dev/mu-plugins:/wordpress/wp-content/mu-plugins --login",
+		"build": "bash bin/build.sh",
+		"icons": "node bin/export-icons.mjs",
+		"contrast": "python3 bin/check-contrast.py",
+		"palettes": "python3 bin/make-palettes.py"
+	},
+	"devDependencies": {
+		"@wp-playground/cli": "3.1.59",
+		"sharp": "0.33.5"
+	}
+}

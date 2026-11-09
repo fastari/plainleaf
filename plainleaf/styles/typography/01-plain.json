@@ -1,0 +1,74 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Plain",
+	"description": "Newsreader titles and reading text, Work Sans for the interface.",
+	"settings": {
+		"typography": {
+			"fontFamilies": [
+				{
+					"slug": "display",
+					"name": "Newsreader (titles)",
+					"fontFamily": "Newsreader, Georgia, Cambria, \"Times New Roman\", serif",
+					"fontFace": [
+						{
+							"fontFamily": "Newsreader",
+							"fontStyle": "normal",
+							"fontWeight": "200 800",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/newsreader/Newsreader-Variable.woff2"
+							]
+						}
+					]
+				},
+				{
+					"slug": "sans",
+					"name": "Work Sans (interface)",
+					"fontFamily": "\"Work Sans\", ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Work Sans",
+							"fontStyle": "normal",
+							"fontWeight": "100 900",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/work-sans/WorkSans-Variable.woff2"
+							]
+						}
+					]
+				},
+				{
+					"slug": "serif",
+					"name": "Newsreader (reading)",
+					"fontFamily": "Newsreader, Georgia, Cambria, \"Times New Roman\", serif",
+					"fontFace": [
+						{
+							"fontFamily": "Newsreader",
+							"fontStyle": "normal",
+							"fontWeight": "200 800",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/newsreader/Newsreader-Variable.woff2"
+							]
+						},
+						{
+							"fontFamily": "Newsreader",
+							"fontStyle": "italic",
+							"fontWeight": "200 800",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/newsreader/Newsreader-Italic-Variable.woff2"
+							]
+						}
+					]
+				},
+				{
+					"slug": "mono",
+					"name": "System monospace",
+					"fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace"
+				}
+			]
+		}
+	}
+}

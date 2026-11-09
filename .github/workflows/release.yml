@@ -1,0 +1,64 @@
+# Attach the theme zip to every GitHub Release.
+#
+# Runs when a release is published (from `make release` or the GitHub website).
+# If the release already has plainleaf-<version>.zip (make release uploads it),
+# nothing happens. Otherwise it checks that the tag matches the Version: header,
+# builds the zip with bin/build.sh (which also checks versions, PHP syntax, JSON
+# and contrast) and attaches it. Sites running Plainleaf then find the update
+# through inc/updater.php.
+name: Release zip
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to build and attach the zip to (for example v1.0.1)
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-zip-${{ github.event.release.tag_name || inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  zip:
+    runs-on: ubuntu-24.04
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ env.TAG }}
+          persist-credentials: false
+
+      - name: Check the tag matches the theme version
+        id: version
+        run: |
+          version="$(sed -n 's/^Version:[[:space:]]*//p' plainleaf/style.css | tr -d '\r')"
+          if [ "v$version" != "$TAG" ]; then
+            echo "Tag $TAG does not match Version: $version in plainleaf/style.css" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Skip if the zip is already attached
+        id: check
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets -q '.assets[].name' | grep -qx "plainleaf-${{ steps.version.outputs.version }}.zip"; then
+            echo "attached=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "attached=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build the theme zip
+        if: steps.check.outputs.attached == 'false'
+        run: bash bin/build.sh
+
+      - name: Attach the zip to the release
+        if: steps.check.outputs.attached == 'false'
+        run: gh release upload "$TAG" "dist/plainleaf-${{ steps.version.outputs.version }}.zip" --repo "$GITHUB_REPOSITORY"

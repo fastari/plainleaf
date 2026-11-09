@@ -1,0 +1,12 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
+	"core": "https://wordpress.org/wordpress-7.1.4.zip",
+	"phpVersion": "8.3",
+	"themes": [ "./plainleaf" ],
+	"mappings": {
+		"wp-content/plainleaf-dev": "./dev"
+	},
+	"lifecycleScripts": {
+		"afterStart": "npx @wordpress/env@10 run cli wp theme activate plainleaf && npx @wordpress/env@10 run cli wp eval-file wp-content/plainleaf-dev/seed.php"
+	}
+}

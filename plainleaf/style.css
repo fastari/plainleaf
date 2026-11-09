@@ -1,0 +1,1061 @@
+/*
+Theme Name: Plainleaf
+Theme URI: https://github.com/fastari/plainleaf
+Author: Fastari
+Author URI: https://fastari.com/
+Description: A calm, text-first block theme for blogs and newsletters, built to be rebranded and run with AI. Your colors, fonts, logo and words live in WordPress settings, so theme updates never overwrite them. Ships with five color palettes, five font pairings, a newsletter signup, listen and share buttons, and Claude skills for rebranding and publishing. Forked from Twenty Twenty-Five by the WordPress team.
+Requires at least: 6.9
+Tested up to: 7.1
+Requires PHP: 7.4
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: plainleaf
+Update URI: https://github.com/fastari/plainleaf
+GitHub Theme URI: fastari/plainleaf
+Primary Branch: main
+Release Asset: true
+Tags: blog, one-column, custom-colors, custom-logo, custom-menu, editor-style, featured-images, full-site-editing, block-patterns, block-styles, style-variations, wide-blocks, translation-ready, accessibility-ready
+*/
+
+/*
+ * Most styling lives in theme.json. This file only holds what theme.json
+ * cannot express yet. Every value references a theme.json token.
+ */
+
+/* ---------- Links (from Twenty Twenty-Five, adapted) ---------- */
+a {
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+}
+
+/* Underlines in body copy take the brand colour; the text keeps full contrast. */
+:where(.wp-block-post-content, .entry-content, .pl-prose) a:where(:not(.wp-element-button)) {
+	text-decoration-color: var(--wp--preset--color--brand-deep);
+	text-decoration-thickness: 2px;
+}
+
+:where(.wp-block-post-content, .entry-content, .pl-prose) a:where(:not(.wp-element-button)):hover {
+	text-decoration-color: currentColor;
+}
+
+/* ---------- Focus (visible, never removed) ---------- */
+:where(.wp-site-blocks *:focus-visible) {
+	outline: 2px solid var(--wp--preset--color--contrast);
+	outline-offset: 3px;
+	border-radius: 2px;
+}
+
+.wp-block-navigation .wp-block-navigation-item .wp-block-navigation-item__content {
+	outline-offset: 4px;
+}
+
+.wp-block-navigation .wp-block-navigation-item ul.wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+	outline-offset: 0;
+}
+
+/* Skip link that WordPress injects: make sure it sits above the sticky header. */
+.skip-link.screen-reader-text:focus {
+	z-index: 100001;
+}
+
+/* ---------- Typography helpers (from Twenty Twenty-Five) ---------- */
+h1, h2, h3, h4, h5, h6, blockquote, caption, figcaption, p {
+	text-wrap: pretty;
+}
+
+h1 {
+	text-wrap: balance;
+}
+
+.more-link {
+	display: block;
+}
+
+:where(pre) {
+	overflow-x: auto;
+}
+
+/* ---------- Sticky header ---------- */
+.wp-site-blocks > header.wp-block-template-part {
+	position: sticky;
+	top: var(--wp-admin--admin-bar--height, 0px);
+	z-index: 50;
+	background-color: var(--wp--preset--color--base);
+	border-bottom: 1px solid var(--wp--preset--color--line);
+}
+
+@media (max-width: 600px) {
+	/* The admin bar is not fixed on small screens, so stick to the very top. */
+	.wp-site-blocks > header.wp-block-template-part {
+		top: 0;
+	}
+}
+
+/* Keep in-page anchors from hiding under the sticky header. */
+html {
+	scroll-padding-top: calc(var(--wp-admin--admin-bar--height, 0px) + 5rem);
+}
+
+
+/* ---------- Logo or site title ---------- */
+.pl-wordmark {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--wp--preset--spacing--20);
+	line-height: 0;
+	color: var(--wp--preset--color--contrast);
+	text-decoration: none;
+}
+
+.pl-wordmark img {
+	display: block;
+	height: var(--pl-wordmark-height, 3rem);
+	width: auto;
+	max-width: none;
+}
+
+.pl-wordmark__title {
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--large);
+	font-weight: 600;
+	line-height: 1.1;
+}
+
+.pl-wordmark--footer {
+	--pl-wordmark-height: 2.75rem;
+}
+
+/* The compact phone logo stays hidden on wider screens. */
+.pl-wordmark img.pl-wordmark__icon {
+	display: none;
+}
+
+@media (max-width: 600px) {
+	.pl-wordmark {
+		--pl-wordmark-height: 2.5rem;
+	}
+
+	.pl-wordmark--has-icon img.pl-wordmark__text {
+		display: none;
+	}
+
+	.pl-wordmark--has-icon img.pl-wordmark__icon {
+		display: block;
+	}
+}
+
+/* ---------- Navigation overlay (mobile) ---------- */
+.wp-block-navigation__responsive-container.is-menu-open {
+	--navigation-layout-justification-setting: flex-start;
+	--navigation-layout-justify: flex-start;
+	--navigation-layout-align: flex-start;
+	padding: var(--wp--preset--spacing--40);
+}
+
+/* Core aligns the open menu to match the desktop alignment (right). Left reads better on a phone. */
+.wp-block-navigation.items-justified-right .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container,
+.wp-block-navigation.items-justified-right .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item {
+	align-items: flex-start;
+}
+
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+	padding-top: var(--wp--preset--spacing--50);
+}
+
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item {
+	font-size: var(--wp--preset--font-size--x-large);
+	font-weight: 700;
+}
+
+/* Current page in the main nav: a quiet brand-colored underline. */
+.wp-block-navigation .current-menu-item > .wp-block-navigation-item__content,
+.wp-block-navigation .wp-block-navigation-item__content[aria-current="page"] {
+	text-decoration: underline;
+	text-decoration-color: var(--wp--preset--color--brand);
+	text-decoration-thickness: 3px;
+	text-underline-offset: 0.4em;
+}
+
+/* ---------- Hero band ---------- */
+.pl-hero .wp-block-buttons {
+	row-gap: var(--wp--preset--spacing--20);
+}
+
+/* ---------- Post list (text-first) ---------- */
+.pl-post-list .wp-block-post-template > li {
+	border-top: 1px solid var(--wp--preset--color--line);
+}
+
+.pl-post-list .wp-block-post-template > li:last-child {
+	border-bottom: 1px solid var(--wp--preset--color--line);
+}
+
+.pl-post-meta {
+	color: var(--wp--preset--color--muted);
+}
+
+.pl-post-meta > * + *::before {
+	content: "\00B7";
+	margin-inline-end: 0.5em;
+	color: var(--wp--preset--color--muted);
+}
+
+/* ---------- Topics ---------- */
+.pl-topics .pl-topic {
+	border-top: 2px solid var(--wp--preset--color--brand);
+	height: 100%;
+}
+
+.pl-topics .pl-topic h3 a {
+	text-decoration: none;
+}
+
+.pl-topics .pl-topic h3 a:hover,
+.pl-topics .pl-topic h3 a:focus-visible {
+	text-decoration: underline;
+	text-decoration-color: var(--wp--preset--color--brand);
+	text-decoration-thickness: 3px;
+}
+
+.pl-topic__number {
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Newsletter signup ---------- */
+.pl-signup form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--wp--preset--spacing--20);
+	align-items: stretch;
+	margin: 0;
+}
+
+.pl-signup label {
+	display: block;
+	width: 100%;
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 500;
+}
+
+/* Inputs: style the theme's fallback form and most plugin forms the same way. */
+.pl-signup input[type="email"],
+.pl-signup input[type="text"],
+.pl-signup input[type="name"] {
+	flex: 1 1 16rem;
+	min-width: 0;
+	min-height: 3rem;
+	padding: 0.75rem 1rem;
+	border: 1.5px solid var(--wp--preset--color--contrast);
+	border-radius: var(--wp--custom--radius--button);
+	background: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--contrast);
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: var(--wp--preset--font-size--medium);
+}
+
+.pl-signup button,
+.pl-signup input[type="submit"] {
+	min-height: 3rem;
+	padding: 0.75rem 1.5rem;
+	border: 0;
+	border-radius: var(--wp--custom--radius--button);
+	background: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--on-accent);
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: var(--wp--preset--font-size--medium);
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.pl-signup button:hover,
+.pl-signup input[type="submit"]:hover {
+	background: var(--wp--preset--color--accent-hover);
+}
+
+.pl-signup__note {
+	color: var(--wp--preset--color--muted);
+}
+
+/* ---------- Social icons: use the text colour, not each network's brand colour ---------- */
+.wp-block-social-links.is-style-logos-only.pl-social .wp-social-link {
+	color: currentColor;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+	}
+}
+
+/* ---------- Topic badge (post categories) ---------- */
+.pl-topic-badge {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+}
+
+.pl-topic-badge .wp-block-post-terms__separator {
+	display: none;
+}
+
+.pl-topic-badge a {
+	display: inline-block;
+	padding: 0.2em 0.7em;
+	border-radius: var(--wp--custom--radius--pill);
+	background: var(--wp--preset--color--brand);
+	color: var(--wp--preset--color--on-brand);
+	line-height: 1.5;
+	text-decoration: none;
+}
+
+.pl-topic-badge a:hover {
+	text-decoration: underline;
+}
+
+.pl-signup input::placeholder {
+	color: var(--wp--preset--color--muted);
+	opacity: 1;
+}
+
+/* ---------- Journal-style home ---------- */
+.pl-label {
+	color: var(--wp--preset--color--brand-ink);
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.pl-featured .wp-block-post-template > li + li .pl-featured__item,
+.pl-featured__item {
+	border-top: 1px solid var(--wp--preset--color--line);
+}
+
+.pl-meta-row {
+	color: var(--wp--preset--color--muted);
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: var(--wp--preset--font-size--x-small);
+}
+
+.pl-meta-row > * {
+	margin: 0;
+}
+
+.pl-featured .wp-block-post-title {
+	text-wrap: balance;
+}
+
+.pl-read-more {
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: var(--wp--preset--font-size--medium);
+	font-weight: 600;
+	text-decoration: underline;
+	text-decoration-color: var(--wp--preset--color--brand);
+	text-decoration-thickness: 2px;
+	text-underline-offset: 0.3em;
+}
+
+.pl-read-more:hover {
+	text-decoration-color: currentColor;
+}
+
+.pl-title-list .wp-block-post-template > li {
+	border-top: 1px solid var(--wp--preset--color--line);
+}
+
+.pl-title-list .wp-block-post-template > li:last-child {
+	border-bottom: 1px solid var(--wp--preset--color--line);
+}
+
+.pl-title-list .wp-block-post-title {
+	flex: 1 1 18rem;
+	margin: 0;
+}
+
+.pl-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 500;
+}
+
+.pl-pills li {
+	margin: 0;
+}
+
+.pl-pills a {
+	display: inline-block;
+	padding: 0.45em 0.95em;
+	border: 1.5px solid var(--wp--preset--color--brand);
+	border-radius: var(--wp--custom--radius--pill);
+	color: var(--wp--preset--color--contrast);
+	text-decoration: none;
+}
+
+.pl-pills a:hover,
+.pl-pills a:focus-visible {
+	background: var(--wp--preset--color--brand);
+	color: var(--wp--preset--color--on-brand);
+}
+
+/* Centred post header (single posts) */
+.pl-topic-badge.has-text-align-center {
+	justify-content: center;
+}
+
+/* The first featured story sits right under the brand band: no divider, less space,
+   so its title starts to show before people scroll. */
+.pl-intro + .pl-featured .wp-block-post-template > li:first-child .pl-featured__item {
+	border-top: 0;
+	padding-top: var(--wp--preset--spacing--40) !important;
+}
+
+/* Standalone small links get a tap area of at least 24px (WCAG 2.2 target size). */
+.pl-tap a {
+	display: inline-block;
+	min-height: 24px;
+	padding-block: 0.25rem;
+}
+
+/* ---------- Hero variants ---------- */
+.pl-name-note {
+	max-width: 26rem;
+}
+
+.pl-byline {
+	opacity: 0.9;
+}
+
+.pl-hero-card {
+	box-shadow: 0 1px 0 rgb(0 0 0 / 0.04), 0 12px 32px -18px rgb(0 0 0 / 0.35);
+}
+
+.pl-hero-card > :first-child {
+	margin-top: 0;
+}
+
+/* Hero art layer: an empty, decorative layer behind the hero text. The theme
+   draws nothing in it. Style its three spans with Additional CSS (Appearance >
+   Editor > Styles > Additional CSS) to add your own illustration, for example:
+     .pl-hero-art__layer > span:nth-child(1) { background: ...; clip-path: ...; }
+   Keep motion short and wrap it in @media (prefers-reduced-motion: no-preference). */
+.pl-hero-art {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+}
+
+/* :where() keeps these defaults at zero specificity, so your own CSS always wins. */
+:where(.pl-hero-art__layer),
+:where(.pl-hero-art__layer > span) {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+:where(.pl-hero-art__layer) {
+	z-index: -1;
+}
+
+/* Hero image or video (Appearance > Theme settings > Home hero). */
+.pl-hero-art__media {
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+	pointer-events: none;
+}
+
+/* The hero is a constrained group, which centers its children at content
+   width. The media and art layers must span the whole band instead. */
+.pl-hero-art > .pl-hero-art__media,
+.pl-hero-art > .pl-hero-art__layer {
+	max-width: none !important;
+	margin: 0 !important;
+}
+
+.pl-hero-art__media img,
+.pl-hero-art__media video {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Right half: fades into the band on its left edge. */
+.pl-hero-art__media--right {
+	left: 45%;
+	-webkit-mask-image: linear-gradient(to right, transparent, black 30%);
+	mask-image: linear-gradient(to right, transparent, black 30%);
+}
+
+/* Whole band, and the right-half layout on phones: tinted with the band color
+   so the hero text keeps its contrast. */
+.pl-hero-art__media--full::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: color-mix(in srgb, var(--wp--preset--color--brand) 78%, transparent);
+}
+
+@media (max-width: 781px) {
+	.pl-hero-art__media--right {
+		left: 0;
+		-webkit-mask-image: none;
+		mask-image: none;
+	}
+
+	.pl-hero-art__media--right::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: color-mix(in srgb, var(--wp--preset--color--brand) 78%, transparent);
+	}
+}
+
+.pl-hero-art__pause {
+	position: absolute;
+	right: var(--wp--preset--spacing--30);
+	bottom: var(--wp--preset--spacing--30);
+	z-index: 1;
+	display: inline-grid;
+	place-items: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	padding: 0;
+	border: 0;
+	border-radius: var(--wp--custom--radius--pill);
+	background: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--contrast);
+	cursor: pointer;
+}
+
+.pl-hero-art__pause .pl-icon:last-child,
+.pl-hero-art__pause.is-paused .pl-icon:first-child {
+	display: none;
+}
+
+.pl-hero-art__pause.is-paused .pl-icon:last-child {
+	display: block;
+}
+
+.pl-hero-art__copy > * {
+	max-width: 48rem !important;
+}
+
+/* ---------- Hero: email form, promise, byline with photo ---------- */
+.pl-hero-title {
+	text-wrap: balance;
+	/* Sized so a short headline of up to three sentences fits on three lines. */
+	font-size: clamp(2.25rem, 1.2rem + 2.6vw, 3rem) !important;
+}
+
+.pl-signup--hero form {
+	flex-wrap: wrap;
+	max-width: 38rem;
+	gap: 0.5rem;
+}
+
+.pl-signup--hero input[type="email"] {
+	flex: 1 1 0;
+	min-width: 12rem;
+	border-color: var(--wp--preset--color--on-brand);
+	background: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--contrast);
+}
+
+.pl-signup--hero button {
+	flex: 0 0 auto;
+	white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+	.pl-signup--hero form {
+		flex-wrap: wrap;
+	}
+
+	.pl-signup--hero input[type="email"],
+	.pl-signup--hero button {
+		flex: 1 1 100%;
+	}
+}
+
+.pl-hero-promise {
+	opacity: 0.92;
+}
+
+.pl-hero-byline .pl-byline {
+	margin: 0;
+	max-width: 32rem;
+	line-height: 1.4;
+}
+
+.pl-hero-byline .pl-byline a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.2em;
+}
+
+.pl-author-photo {
+	flex: none;
+	line-height: 0;
+}
+
+.pl-author-photo__img {
+	display: block;
+	width: var(--pl-author-size, 56px);
+	height: var(--pl-author-size, 56px);
+	border-radius: 50%;
+	object-fit: cover;
+	box-shadow: 0 0 0 3px var(--wp--preset--color--base);
+}
+
+
+/* Signup form message (errors from the newsletter tool). */
+.pl-signup__message {
+	flex-basis: 100%;
+	margin: 0.25rem 0 0;
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 600;
+}
+
+.pl-signup button:disabled {
+	cursor: progress;
+	opacity: 0.8;
+}
+
+/* ==========================================================================
+   Blog, topic pages, posts, Start here, About
+   ========================================================================== */
+
+/* Topic filter (Blog and topic pages) */
+.pl-filter ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 500;
+}
+
+.pl-filter li {
+	margin: 0;
+}
+
+.pl-filter a {
+	display: inline-block;
+	padding: 0.45em 0.95em;
+	border: 1.5px solid var(--wp--preset--color--brand);
+	border-radius: var(--wp--custom--radius--pill);
+	color: var(--wp--preset--color--contrast);
+	text-decoration: none;
+}
+
+.pl-filter a:hover,
+.pl-filter a:focus-visible {
+	background: color-mix(in srgb, var(--wp--preset--color--brand) 35%, transparent);
+}
+
+.pl-filter a.is-current {
+	background: var(--wp--preset--color--brand);
+	color: var(--wp--preset--color--on-brand);
+	font-weight: 600;
+}
+
+.pl-archive-header .wp-block-term-description p {
+	margin: 0;
+}
+
+/* Post header: story hook under the title */
+.pl-dek {
+	max-width: 36rem;
+	margin-inline: auto;
+	color: var(--wp--preset--color--muted);
+	font-style: italic;
+	line-height: 1.5;
+}
+
+.pl-dek p {
+	margin: 0;
+}
+
+/* End of post: author box */
+.pl-author-box p {
+	margin: 0;
+	line-height: 1.5;
+}
+
+/* Cards (related posts, card grid) */
+.pl-card {
+	height: 100%;
+	border-radius: var(--wp--custom--radius--card);
+	background: var(--wp--preset--color--surface);
+}
+
+.pl-card .wp-block-post-title {
+	margin: 0;
+	line-height: 1.2;
+}
+
+.pl-card .wp-block-post-excerpt__excerpt {
+	margin: 0;
+}
+
+.pl-related .pl-label {
+	margin-bottom: var(--wp--preset--spacing--30);
+}
+
+/* Reflection question box */
+.pl-reflection > * {
+	margin: 0;
+}
+
+.pl-reflection > * + * {
+	margin-top: var(--wp--preset--spacing--20);
+}
+
+/* Start here: numbered reading list */
+.pl-start-list {
+	counter-reset: pl-start;
+}
+
+.pl-start-list > li {
+	position: relative;
+	padding-left: 3.25rem;
+	border-top: 1px solid var(--wp--preset--color--line);
+	counter-increment: pl-start;
+}
+
+.pl-start-list > li:last-child {
+	border-bottom: 1px solid var(--wp--preset--color--line);
+}
+
+.pl-start-list > li::before {
+	content: counter(pl-start, decimal-leading-zero);
+	position: absolute;
+	left: 0;
+	top: calc(var(--wp--preset--spacing--40) + 0.15rem);
+	color: var(--wp--preset--color--brand-ink);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--x-large);
+	font-weight: 600;
+	line-height: 1;
+}
+
+/* About: photo column */
+/* No author photo chosen: drop the empty photo column and let the text use the space. */
+.pl-about__photo:not(:has(.pl-author-photo)) {
+	display: none;
+}
+
+.pl-about:not(:has(.pl-author-photo)) > .wp-block-column {
+	flex-basis: 100% !important;
+	max-width: 46rem;
+}
+
+.pl-about__photo .pl-author-photo.is-portrait {
+	position: sticky;
+	top: 7rem;
+}
+
+.pl-author-photo.is-portrait .pl-author-photo__img {
+	width: 100%;
+	max-width: 22rem;
+	height: auto;
+	aspect-ratio: 1;
+	border-radius: var(--wp--custom--radius--card);
+	box-shadow: none;
+}
+
+@media (max-width: 781px) {
+	.pl-about__photo {
+		order: -1;
+	}
+
+	.pl-about__photo .pl-author-photo.is-portrait {
+		position: static;
+	}
+
+	.pl-author-photo.is-portrait .pl-author-photo__img {
+		max-width: 14rem;
+	}
+}
+
+/* ==========================================================================
+   Listen and share (post date row) and the player bar
+   ========================================================================== */
+.pl-actions {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.pl-action {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 2.25rem;
+	height: 2.25rem;
+	padding: 0;
+	border: 1px solid var(--wp--preset--color--line);
+	border-radius: var(--wp--custom--radius--pill);
+	background: transparent;
+	color: var(--wp--preset--color--contrast);
+	cursor: pointer;
+}
+
+.pl-action .pl-icon {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.pl-action:hover {
+	background: var(--wp--preset--color--surface);
+}
+
+.pl-action--listen,
+.pl-player__toggle {
+	border-color: var(--wp--preset--color--brand);
+	background: var(--wp--preset--color--brand);
+	color: var(--wp--preset--color--on-brand);
+}
+
+.pl-action--listen:hover,
+.pl-player__toggle:hover {
+	border-color: var(--wp--preset--color--brand-deep);
+	background: var(--wp--preset--color--brand);
+}
+
+.pl-action:focus-visible,
+.pl-share-menu a:focus-visible,
+.pl-share-menu button:focus-visible,
+.pl-player button:focus-visible,
+.pl-player__range:focus-visible {
+	outline: 2px solid var(--wp--preset--color--contrast);
+	outline-offset: 3px;
+}
+
+.pl-share-menu {
+	position: absolute;
+	top: calc(100% + 0.5rem);
+	right: 0;
+	z-index: 20;
+	min-width: 11rem;
+	padding: 0.35rem;
+	border: 1px solid var(--wp--preset--color--line);
+	border-radius: var(--wp--custom--radius--card);
+	background: var(--wp--preset--color--base);
+	box-shadow: 0 8px 24px rgb(0 0 0 / 0.08);
+	text-align: left;
+}
+
+.pl-share-menu ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.pl-share-menu li {
+	margin: 0;
+	padding: 0;
+}
+
+.pl-share-menu a,
+.pl-share-menu button {
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	width: 100%;
+	min-height: 2.5rem;
+	padding: 0.4rem 0.7rem;
+	border: 0;
+	border-radius: 0.5rem;
+	background: none;
+	color: var(--wp--preset--color--contrast);
+	font: inherit;
+	font-size: var(--wp--preset--font-size--small);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.pl-share-menu a:hover,
+.pl-share-menu button:hover {
+	background: var(--wp--preset--color--surface);
+}
+
+.pl-share-menu .pl-icon {
+	width: 1.125rem;
+	height: 1.125rem;
+	flex: none;
+}
+
+/* Player bar: slides up from the bottom while a post is playing. */
+.pl-player {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 100;
+	padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom, 0px));
+	border-top: 1px solid var(--wp--preset--color--line);
+	background: var(--wp--preset--color--base);
+	box-shadow: 0 -6px 20px rgb(0 0 0 / 0.06);
+	transform: translateY(110%);
+	visibility: hidden;
+}
+
+.pl-player.is-open {
+	transform: none;
+	visibility: visible;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.pl-player {
+		transition: transform 0.25s ease, visibility 0.25s;
+	}
+}
+
+.pl-player__inner {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	max-width: 46rem;
+	margin: 0 auto;
+	color: var(--wp--preset--color--muted);
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: var(--wp--preset--font-size--x-small);
+}
+
+.pl-player__range {
+	flex: 1;
+	min-width: 4rem;
+	height: 1.5rem;
+	margin: 0;
+	accent-color: var(--wp--preset--color--brand-deep);
+	cursor: pointer;
+}
+
+.pl-player__time {
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.pl-player__speed {
+	min-width: 3rem;
+	min-height: 2rem;
+	padding: 0.25rem 0.6rem;
+	border: 1px solid var(--wp--preset--color--line);
+	border-radius: var(--wp--custom--radius--pill);
+	background: transparent;
+	color: var(--wp--preset--color--contrast);
+	font: inherit;
+	font-variant-numeric: tabular-nums;
+	cursor: pointer;
+}
+
+.pl-player__close {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	border: 0;
+	border-radius: var(--wp--custom--radius--pill);
+	background: none;
+	color: var(--wp--preset--color--muted);
+	cursor: pointer;
+}
+
+.pl-player__close:hover {
+	background: var(--wp--preset--color--surface);
+	color: var(--wp--preset--color--contrast);
+}
+
+.pl-player__close .pl-icon {
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+body.pl-has-player {
+	padding-bottom: 4.5rem;
+}
+
+@media (max-width: 400px) {
+	.pl-player__inner {
+		gap: 0.5rem;
+	}
+
+	.pl-player__time {
+		display: none;
+	}
+}
+
+/* Post date row on two lines, at every width: the text first (date ·
+   reading time), then the shapes (topic badge, play, share). */
+.pl-post-header .pl-meta-row {
+	row-gap: 0.375rem; /* Counted twice: the line break below is its own empty row. */
+}
+
+.pl-post-header .pl-meta-row > .wp-block-post-date {
+	order: 1;
+}
+
+.pl-post-header .pl-meta-row > .wp-block-post-time-to-read {
+	order: 2;
+}
+
+.pl-post-header .pl-meta-row > .wp-block-post-time-to-read::before {
+	content: "·";
+	margin-inline-end: 0.75rem;
+}
+
+.pl-post-header .pl-meta-row::after {
+	content: "";
+	flex-basis: 100%;
+	order: 3;
+	height: 0;
+}
+
+.pl-post-header .pl-meta-row > .pl-topic-badge {
+	order: 4;
+}
+
+.pl-post-header .pl-meta-row > .pl-actions {
+	order: 5;
+}
+
+/* Wide and full-width blocks inside a post (for example a big diagram set to
+   "Wide width" in the editor) extend past the reading column. Posts sit in a
+   narrow constrained group, so the block breaks out from the centre. */
+.wp-block-post-content > .alignwide {
+	width: min(var(--wp--style--global--wide-size), calc(100vw - var(--wp--style--root--padding-left, 1rem) - var(--wp--style--root--padding-right, 1rem)));
+	max-width: none !important;
+	margin-left: 50% !important;
+	transform: translateX(-50%);
+}
+
+.wp-block-post-content > .alignfull {
+	width: 100vw;
+	max-width: none !important;
+	margin-left: 50% !important;
+	transform: translateX(-50%);
+}
+
