@@ -3,7 +3,7 @@
 #
 # The version comes from the Version: header in plainleaf/style.css.
 # The script refuses to build if the versions in style.css, readme.txt and
-# package.json disagree, or if CHANGELOG.md has no entry for the version.
+# package.json disagree. Releases stamp them first (bin/stamp-version.sh).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -20,10 +20,6 @@ if [[ "$version_style" != "$version_readme" || "$version_style" != "$version_pac
 	exit 1
 fi
 
-if ! grep -q "^## \[$version_style\]" "$ROOT/CHANGELOG.md"; then
-	echo "CHANGELOG.md has no entry for $version_style" >&2
-	exit 1
-fi
 
 # Basic checks before packaging.
 while IFS= read -r -d '' file; do

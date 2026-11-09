@@ -1,44 +1,58 @@
 ---
 name: release
-description: Release a new version of the Plainleaf theme - bump the version in every place, write the CHANGELOG entry, build and check the zip, and publish a GitHub release that sites auto-update from. Use when the user wants to release, ship, publish or version the theme.
+description: Ship a new version of the Plainleaf theme. Releases are automatic when theme changes are merged to main; this skill picks the right version bump (PR label), gets the PR through its checks, and confirms the GitHub release and the zip that sites auto-update from. Use when the user wants to release, ship, publish or version the theme.
 ---
 
 # Release Plainleaf
 
-Sites update from public GitHub releases (`plainleaf/inc/updater.php`). A release is
-outward-facing: every site with auto-updates installs it within about 12 hours. Confirm
-with the user before publishing.
+Releases are cut by `.github/workflows/release.yml`, not by hand. Every push to `main` that
+changes `plainleaf/` (a merged PR) publishes release `vX.Y.Z` with `plainleaf-X.Y.Z.zip`.
+Every site with auto-updates installs it within about 12 hours, so a merge is
+outward-facing: confirm with the user before merging.
 
-## 1. Pick the version
+Don't edit the `Version:` header, `Stable tag:` or `package.json` version in a PR. The
+workflow works out the version from the release tags (`bin/next-version.sh`) and stamps it
+into the build (`bin/stamp-version.sh`). The value in the repo is only the very first
+version.
 
-Semantic versioning: patch (1.0.1) for fixes, minor (1.1.0) for new features that don't
-change existing sites, major (2.0.0) for anything that changes how existing sites look or
-removes a setting. Look at the commits since the last tag (`git log v<last>..HEAD`) and
-propose a number.
+## 1. Pick the bump (a label on the PR)
 
-## 2. Bump it everywhere (on a branch, through a PR)
+Look at what the PR changes for site owners:
 
-The build refuses to run unless these match:
-- `plainleaf/style.css` → `Version:`
-- `plainleaf/readme.txt` → `Stable tag:` (and a short `= x.y.z =` changelog line)
-- `package.json` → `"version"`
-- `CHANGELOG.md` → a new `## [x.y.z] - YYYY-MM-DD` section at the top, written for site
-  owners: what changed for them, in plain words. Mention anything they need to do.
+| Change | Label | Example |
+| --- | --- | --- |
+| Fixes, small tweaks, no new settings | none (patch) | 1.2.3 → 1.2.4 |
+| New feature or setting that doesn't change existing sites | `release:minor` | 1.2.3 → 1.3.0 |
+| Changes how existing sites look, or removes or renames a setting | `release:major` | 1.2.3 → 2.0.0 |
+| Theme files changed but nothing site owners would notice | `release:skip` | no release |
 
-Run `make build` (checks versions, PHP syntax, JSON, contrast, builds `dist/`) and
-`vendor/bin/phpcs`. Open a PR; the Security workflow must pass. Merge it.
+Add it with `gh pr edit <number> --add-label release:minor`. Changes outside `plainleaf/`
+(docs, CI, tooling) never release, so they need no label.
 
-## 3. Publish
+## 2. Get the PR green
 
-On an up-to-date `main`: `make release`. It builds the zip and creates release `vX.Y.Z`
-with `plainleaf-X.Y.Z.zip` attached and the CHANGELOG section as notes. (A release made
-on the GitHub website also works: the Release zip workflow builds and attaches the zip.)
+`make build` and `vendor/bin/phpcs` locally; on GitHub the Security workflow (PHPCS and
+Semgrep) must pass. The PR title becomes a line in the release notes, so make it read well
+for site owners ("Add a hero video option", not "fix stuff").
 
-## 4. Check
+## 3. Merge, then check
 
-- The release page shows `plainleaf-X.Y.Z.zip`.
-- On a site: Dashboard > Updates > Check again shows the new version (the theme caches the
-  check for 6 hours; updating clears it).
-- Tell the user the release URL.
+After the user confirms, merge (squash). Then:
 
-Never move or delete an existing tag or release; fix forward with a new patch version.
+- `gh run watch` (or the Actions tab): the Release workflow should finish green.
+- `gh release view --json tagName,assets`: the new tag and `plainleaf-X.Y.Z.zip`.
+- On a site: Dashboard > Updates > Check again shows it (the theme caches the check for 6
+  hours; updating clears it).
+
+Tell the user the version and the release URL.
+
+## Releasing without a merge
+
+`make release` (patch) or `make release BUMP=minor` starts the same workflow from the
+current `main` (Actions tab > Release > Run workflow does the same).
+
+## If something goes wrong
+
+Never move or delete a published tag or release: sites may already have installed it. Fix
+forward: merge the fix and let the next patch release go out. If the workflow failed before
+publishing, fix the cause and re-run it from the Actions tab.

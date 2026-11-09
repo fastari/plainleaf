@@ -1,64 +1,101 @@
-# Attach the theme zip to every GitHub Release.
+# Release automatically when theme changes reach main.
 #
-# Runs when a release is published (from `make release` or the GitHub website).
-# If the release already has plainleaf-<version>.zip (make release uploads it),
-# nothing happens. Otherwise it checks that the tag matches the Version: header,
-# builds the zip with bin/build.sh (which also checks versions, PHP syntax, JSON
-# and contrast) and attaches it. Sites running Plainleaf then find the update
-# through inc/updater.php.
-name: Release zip
+# On every push to main that changes plainleaf/ (a merged pull request):
+#   1. Pick the bump from the merged PR's labels: release:major, release:minor,
+#      or patch by default. release:skip means no release for that PR.
+#   2. Work out the next version from the vX.Y.Z tags (bin/next-version.sh).
+#      With no tags yet, the first release uses the Version: in style.css.
+#   3. Stamp that version into the build (bin/stamp-version.sh), build the zip
+#      with the usual checks (bin/build.sh), and publish release vX.Y.Z with
+#      plainleaf-X.Y.Z.zip and notes generated from the merged PRs.
+# Sites running Plainleaf then find the update through inc/updater.php.
+#
+# Changes outside plainleaf/ (docs, CI, tooling, Dependabot) don't release.
+# Run it by hand from the Actions tab to release with a chosen bump.
+# Nothing is committed back to main: the tags are the source of truth.
+name: Release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [main]
+    paths: ['plainleaf/**']
   workflow_dispatch:
     inputs:
-      tag:
-        description: Release tag to build and attach the zip to (for example v1.0.1)
-        required: true
+      bump:
+        description: Version bump
+        type: choice
+        options: [patch, minor, major]
+        default: patch
 
 permissions:
   contents: write
+  pull-requests: read
 
+# One release at a time, in order.
 concurrency:
-  group: release-zip-${{ github.event.release.tag_name || inputs.tag }}
+  group: release
   cancel-in-progress: false
 
 jobs:
-  zip:
+  release:
     runs-on: ubuntu-24.04
     env:
-      TAG: ${{ github.event.release.tag_name || inputs.tag }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          ref: ${{ env.TAG }}
+          fetch-depth: 0 # all tags, to work out the next version
           persist-credentials: false
 
-      - name: Check the tag matches the theme version
-        id: version
+      - name: Choose the version bump
+        id: bump
+        env:
+          MANUAL_BUMP: ${{ inputs.bump }}
         run: |
-          version="$(sed -n 's/^Version:[[:space:]]*//p' plainleaf/style.css | tr -d '\r')"
-          if [ "v$version" != "$TAG" ]; then
-            echo "Tag $TAG does not match Version: $version in plainleaf/style.css" >&2
+          if [ -n "$MANUAL_BUMP" ]; then
+            echo "bump=$MANUAL_BUMP" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          labels="$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq '.[0].labels[].name' 2>/dev/null || true)"
+          if grep -qx 'release:skip' <<< "$labels"; then
+            echo "The merged PR is labelled release:skip; no release."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          elif grep -qx 'release:major' <<< "$labels"; then
+            echo "bump=major" >> "$GITHUB_OUTPUT"
+          elif grep -qx 'release:minor' <<< "$labels"; then
+            echo "bump=minor" >> "$GITHUB_OUTPUT"
+          else
+            echo "bump=patch" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Work out the next version
+        if: steps.bump.outputs.skip != 'true'
+        id: version
+        env:
+          BUMP: ${{ steps.bump.outputs.bump }}
+        run: |
+          version="$(bash bin/next-version.sh "$BUMP")"
+          if gh release view "v$version" >/dev/null 2>&1; then
+            echo "v$version already exists; nothing to do." >&2
             exit 1
           fi
+          echo "Releasing v$version ($BUMP)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
-      - name: Skip if the zip is already attached
-        id: check
-        run: |
-          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets -q '.assets[].name' | grep -qx "plainleaf-${{ steps.version.outputs.version }}.zip"; then
-            echo "attached=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "attached=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Build the theme zip
-        if: steps.check.outputs.attached == 'false'
-        run: bash bin/build.sh
+        if: steps.bump.outputs.skip != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          bash bin/stamp-version.sh "$VERSION"
+          bash bin/build.sh
 
-      - name: Attach the zip to the release
-        if: steps.check.outputs.attached == 'false'
-        run: gh release upload "$TAG" "dist/plainleaf-${{ steps.version.outputs.version }}.zip" --repo "$GITHUB_REPOSITORY"
+      - name: Publish the release
+        if: steps.bump.outputs.skip != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "v$VERSION" "dist/plainleaf-$VERSION.zip" \
+            --title "v$VERSION" \
+            --generate-notes \
+            --target "$GITHUB_SHA"

@@ -91,12 +91,18 @@ before changing anything, and most changes can be undone from the MCP's change l
 
 ## Updates
 
-The theme checks this repository's public releases every few hours (no token, no account)
-and offers new versions in Dashboard > Updates. Only zips from this repo's release
-downloads are accepted. Point it at your own fork with
-`define( 'PLAINLEAF_UPDATE_REPO', 'you/plainleaf' );` in `wp-config.php`, or turn it off with
-`define( 'PLAINLEAF_DISABLE_UPDATES', true );`. Git Updater also works (the theme has
-`GitHub Theme URI` and `Release Asset` headers).
+Releases are automatic. Every pull request merged into `main` that changes the theme
+(`plainleaf/`) publishes a new GitHub release: the version comes from the release tags
+(patch by default; label the PR `release:minor` or `release:major` for bigger bumps, or
+`release:skip` for no release), the zip is built and checked, and release notes are
+generated from the merged pull requests. Changes to docs, CI or tooling don't release.
+
+Sites check this repository's public releases every few hours (no token, no account) and
+offer new versions in Dashboard > Updates, or install them on their own with auto-updates
+on. Only zips from this repo's release downloads are accepted. Point a site at your own
+fork with `define( 'PLAINLEAF_UPDATE_REPO', 'you/plainleaf' );` in `wp-config.php`, or turn
+updates off with `define( 'PLAINLEAF_DISABLE_UPDATES', true );`. Git Updater also works (the
+theme has `GitHub Theme URI` and `Release Asset` headers).
 
 ## Development
 
@@ -110,7 +116,7 @@ make dev        # local WordPress at http://127.0.0.1:9400 with demo content
 make build      # checks (versions, PHP, JSON, contrast) and builds dist/plainleaf-x.y.z.zip
 make lint       # PHPCS with WordPress Coding Standards
 make palettes   # regenerate styles/colors from bin/make-palettes.py
-make release    # publish the current version (on an up-to-date main)
+make release    # release without a merge (BUMP=patch|minor|major); merges release on their own
 ```
 
 Rules for changes are in [CONTRIBUTING.md](CONTRIBUTING.md). In short: design tokens only,

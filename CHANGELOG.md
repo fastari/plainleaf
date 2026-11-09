@@ -1,6 +1,8 @@
 # Changelog
 
-All notable changes to Plainleaf. Versions follow [semantic versioning](https://semver.org).
+Release notes for every version are on the [Releases page](https://github.com/fastari/plainleaf/releases),
+generated from the merged pull requests. This file keeps the highlights. Versions follow
+[semantic versioning](https://semver.org).
 
 ## [1.0.0] - 2026-11-08
 
@@ -16,7 +18,8 @@ First public release.
 - About page starter pattern; pages open inside their template in the editor.
 - Newsletter signup for any tool, listen and share buttons, topic pages and filter,
   related posts, Start here, `/llms.txt`.
-- Automatic updates from public GitHub releases, no token.
+- Automatic updates from public GitHub releases, no token. Releases are cut automatically
+  when theme changes are merged.
 - Claude Code skills: rebrand, add-feature, publish-from-notion, release,
   theme-security-review.
 - PHPCS (WordPress security sniffs) and Semgrep on every pull request and weekly;

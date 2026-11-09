@@ -16,5 +16,5 @@ lint: ## PHPCS with WordPress Coding Standards (run composer install once first)
 palettes: ## Regenerate plainleaf/styles/colors from bin/make-palettes.py, then check contrast
 	python3 bin/make-palettes.py && python3 bin/check-contrast.py
 
-release: ## Publish the current version as a GitHub Release (run on an up-to-date main)
-	bash bin/release.sh
+release: ## Release now without a merge: make release BUMP=patch|minor|major (default patch)
+	gh workflow run release.yml -f bump=$(or $(BUMP),patch)

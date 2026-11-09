@@ -52,5 +52,6 @@ Read `CONTRIBUTING.md` and look at a similar existing file before writing.
 1. `make build` (PHP lint, JSON, contrast, zip) and `vendor/bin/phpcs` must pass.
 2. Test locally with `make dev` (http://127.0.0.1:9400) in light and Night palettes and at
    phone width. Turn the feature's text off/empty and check nothing breaks.
-3. Add a CHANGELOG entry under a new version (see the `release` skill). Open a PR; don't
-   push to main.
+3. Open a PR; don't push to main, and don't change the version. Give the PR a title that
+   reads well in release notes, and label it `release:minor` for a new feature (see the
+   `release` skill: merging releases automatically).
