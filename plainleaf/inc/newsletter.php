@@ -295,7 +295,7 @@ function plainleaf_newsletter_print_script() {
 						}
 						return;
 					}
-					window.location.assign( form.dataset.plainleafRedirect );
+					window.location.assign( form.dataset.plRedirect );
 				} )
 				.catch( native );
 		} );
