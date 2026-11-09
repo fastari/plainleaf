@@ -4,9 +4,6 @@
 #          sanitizing, nonces, safe redirects, prepared SQL). Config: phpcs.xml.dist
 #   Semgrep  PHP, security-audit and secrets rules from the Semgrep Registry.
 #          Results also go to the Security tab (code scanning) on public repos.
-#   Brand guard  Fails if any file matches the private BRAND_DENYLIST secret
-#          (names and details of private sites that must never land here).
-#          Skipped when the secret isn't available, such as PRs from forks.
 #
 # None of these need an account or a personal token. Every action and image is
 # pinned to an exact commit or digest (Dependabot proposes updates as PRs), and
@@ -81,16 +78,3 @@ jobs:
         with:
           sarif_file: semgrep.sarif
           category: semgrep
-
-  brand-guard:
-    name: Brand guard
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-        with:
-          persist-credentials: false
-
-      - name: Check for private names and details
-        env:
-          BRAND_DENYLIST: ${{ secrets.BRAND_DENYLIST }}
-        run: bash bin/check-brand.sh

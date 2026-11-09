@@ -19,8 +19,8 @@ First public release.
 - Automatic updates from public GitHub releases, no token.
 - Claude Code skills: rebrand, add-feature, publish-from-notion, release,
   theme-security-review.
-- PHPCS (WordPress security sniffs), Semgrep and a brand guard on every pull request and
-  weekly; Dependabot for the tooling; CI actions pinned to exact commits.
+- PHPCS (WordPress security sniffs) and Semgrep on every pull request and weekly;
+  Dependabot for the tooling; CI actions pinned to exact commits.
 
 ### Security
 

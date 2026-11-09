@@ -119,9 +119,7 @@ no hardcoded visible text, everything escaped, no build step, no external reques
 ## Security
 
 Report vulnerabilities privately; see [SECURITY.md](SECURITY.md). Every PR and a weekly
-job run PHPCS (WordPress security sniffs), Semgrep (code and secrets), and a brand guard
-that blocks details of private sites from landing here (`bin/check-brand.sh`, with the
-list kept as a repository secret, not in the code).
+job run PHPCS (WordPress security sniffs) and Semgrep (code and secrets).
 
 ## License
 
