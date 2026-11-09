@@ -30,6 +30,8 @@ Fork it on GitHub if you want changes: https://github.com/fastari/plainleaf
 
 == Changelog ==
 
+Release notes for every version: https://github.com/fastari/plainleaf/releases
+
 = 1.0.0 =
 * First public release.
 

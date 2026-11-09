@@ -1,4 +1,6 @@
 # Weekly update pull requests for the GitHub Actions, npm and Composer tooling.
+# cooldown: only propose versions that have been out for 14 days, so a bad or
+# compromised release has time to be caught first. Security updates skip the wait.
 # Security alerts are turned on in the repository settings (Settings > Code security).
 version: 2
 updates:
@@ -6,6 +8,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 14
     groups:
       actions:
         patterns: ['*']
@@ -14,6 +18,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 14
     groups:
       npm-tooling:
         patterns: ['*']
@@ -22,6 +28,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 14
     groups:
       composer-tooling:
         patterns: ['*']
