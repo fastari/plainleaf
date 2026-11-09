@@ -153,7 +153,11 @@ function plainleaf_post_actions_html( $post_id ) {
 		'close' => plainleaf_icon( 'close' ),
 	);
 
-	$html  = '<div class="pl-actions" data-pl-actions data-labels="' . esc_attr( wp_json_encode( $labels ) ) . '" data-icons="' . esc_attr( wp_json_encode( $icons ) ) . '">';
+	$html = '<div class="pl-actions" data-pl-actions data-labels="' . esc_attr( wp_json_encode( $labels ) ) . '">';
+	// The script clones these instead of turning attribute text into HTML.
+	foreach ( $icons as $plainleaf_icon_name => $plainleaf_icon_svg ) {
+		$html .= '<template data-pl-icon="' . esc_attr( $plainleaf_icon_name ) . '">' . $plainleaf_icon_svg . '</template>';
+	}
 	if ( $audio ) {
 		$artwork = get_site_icon_url( 512 );
 		$html   .= sprintf(
