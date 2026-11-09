@@ -91,11 +91,11 @@ before changing anything, and most changes can be undone from the MCP's change l
 
 ## Updates
 
-Releases are automatic. Every pull request merged into `main` that changes the theme
-(`plainleaf/`) publishes a new GitHub release: the version comes from the release tags
-(patch by default; label the PR `release:minor` or `release:major` for bigger bumps, or
-`release:skip` for no release), the zip is built and checked, and release notes are
-generated from the merged pull requests. Changes to docs, CI or tooling don't release.
+Releases are automatic. Every pull request that changes the theme (`plainleaf/`) carries
+one label, `release:patch`, `release:minor`, `release:major` or `release:skip` (a required
+check blocks the merge without one). Merging it publishes the next version, worked out from
+the release tags, with the zip built and checked and release notes generated from the
+merged pull requests. Changes to docs, CI or tooling don't release and need no label.
 
 Sites check this repository's public releases every few hours (no token, no account) and
 offer new versions in Dashboard > Updates, or install them on their own with auto-updates

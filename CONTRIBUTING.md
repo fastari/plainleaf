@@ -30,8 +30,9 @@ everything or answer quickly, but I read every pull request.
 7. **Licensing:** everything must be GPL-compatible. Fonts must be OFL with their licence
    file included and credited in `plainleaf/readme.txt`.
 
-Don't bump the version in a PR. Merging releases automatically: patch by default, or ask
-for a `release:minor` / `release:major` label for new features or breaking changes.
+Don't bump the version in a PR. Merging releases automatically; the maintainer adds the
+release label (`release:patch`, `release:minor`, `release:major` or `release:skip`).
+PRs from outside the repo run their checks once the maintainer approves the run.
 
 ## Using Claude Code
 

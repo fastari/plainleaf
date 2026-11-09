@@ -1,8 +1,9 @@
 # Release automatically when theme changes reach main.
 #
 # On every push to main that changes plainleaf/ (a merged pull request):
-#   1. Pick the bump from the merged PR's labels: release:major, release:minor,
-#      or patch by default. release:skip means no release for that PR.
+#   1. Pick the bump from the merged PR's label: release:patch, release:minor or
+#      release:major (the required "Release label" check makes sure there is
+#      exactly one). release:skip means no release for that PR.
 #   2. Work out the next version from the vX.Y.Z tags (bin/next-version.sh).
 #      With no tags yet, the first release uses the Version: in style.css.
 #   3. Stamp that version into the build (bin/stamp-version.sh), build the zip
@@ -64,8 +65,11 @@ jobs:
             echo "bump=major" >> "$GITHUB_OUTPUT"
           elif grep -qx 'release:minor' <<< "$labels"; then
             echo "bump=minor" >> "$GITHUB_OUTPUT"
-          else
+          elif grep -qx 'release:patch' <<< "$labels"; then
             echo "bump=patch" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::No release label on the merged PR (release:patch, release:minor, release:major or release:skip). Run this workflow by hand to release."
+            exit 1
           fi
 
       - name: Work out the next version

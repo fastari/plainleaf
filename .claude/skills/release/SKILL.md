@@ -19,9 +19,12 @@ version.
 
 Look at what the PR changes for site owners:
 
+Every PR that changes `plainleaf/` needs exactly one of these labels; the required
+**Release label** check blocks the merge until it has one.
+
 | Change | Label | Example |
 | --- | --- | --- |
-| Fixes, small tweaks, no new settings | none (patch) | 1.2.3 → 1.2.4 |
+| Fixes, small tweaks, no new settings | `release:patch` | 1.2.3 → 1.2.4 |
 | New feature or setting that doesn't change existing sites | `release:minor` | 1.2.3 → 1.3.0 |
 | Changes how existing sites look, or removes or renames a setting | `release:major` | 1.2.3 → 2.0.0 |
 | Theme files changed but nothing site owners would notice | `release:skip` | no release |
@@ -29,10 +32,13 @@ Look at what the PR changes for site owners:
 Add it with `gh pr edit <number> --add-label release:minor`. Changes outside `plainleaf/`
 (docs, CI, tooling) never release, so they need no label.
 
+PRs from people outside the repo don't run any checks until the owner clicks **Approve and
+run** on the PR. Only the owner can merge.
+
 ## 2. Get the PR green
 
-`make build` and `vendor/bin/phpcs` locally; on GitHub the Security workflow (PHPCS and
-Semgrep) must pass. The PR title becomes a line in the release notes, so make it read well
+`make build` and `vendor/bin/phpcs` locally; on GitHub, PHPCS, Semgrep and Release label
+must pass (they're required on `main`). The PR title becomes a line in the release notes, so make it read well
 for site owners ("Add a hero video option", not "fix stuff").
 
 ## 3. Merge, then check
