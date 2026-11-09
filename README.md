@@ -127,6 +127,12 @@ no hardcoded visible text, everything escaped, no build step, no external reques
 Report vulnerabilities privately; see [SECURITY.md](SECURITY.md). Every PR and a weekly
 job run PHPCS (WordPress security sniffs) and Semgrep (code and secrets).
 
+## Name
+
+Forks and copies are welcome under the GPL. Please give yours a different name, and don't
+present it as Plainleaf or as a Fastari release. The GPL covers the code, not the
+Plainleaf or Fastari names.
+
 ## License
 
 GPL-2.0-or-later, see [LICENSE](LICENSE). Forked from Twenty Twenty-Five by the WordPress
