@@ -7,8 +7,9 @@ Your colors, fonts, logo and every sentence visitors read live in **WordPress se
 not in the theme files. So you can rebrand without touching code, and theme updates never
 overwrite your look.
 
-> I maintain this for my own sites. Fixes and improvements are welcome as PRs.
-> There's no support promise, but I read every pull request.
+> I maintain this for my own sites, so it doesn't take outside pull requests or issues.
+> Fork it if you want something different (see [Name](#name)). Security reports are
+> welcome, privately: see [SECURITY.md](SECURITY.md).
 
 ## What you get
 

@@ -25,8 +25,8 @@ updates never overwrite your branding.
 * Fonts are bundled; the theme makes no requests to third-party servers and adds no tracking.
 * Updates itself from public GitHub releases (no account or token).
 
-I maintain this for my own sites. Fixes and improvements are welcome as pull requests:
-https://github.com/fastari/plainleaf
+I maintain this for my own sites and don't take outside pull requests or issues.
+Fork it on GitHub if you want changes: https://github.com/fastari/plainleaf
 
 == Changelog ==
 
