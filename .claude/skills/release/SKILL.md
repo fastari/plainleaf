@@ -32,8 +32,7 @@ Every PR that changes `plainleaf/` needs exactly one of these labels; the requir
 Add it with `gh pr edit <number> --add-label release:minor`. Changes outside `plainleaf/`
 (docs, CI, tooling) never release, so they need no label.
 
-PRs from people outside the repo don't run any checks until the owner clicks **Approve and
-run** on the PR. Only the owner can merge.
+Only collaborators can open PRs, and only the owner merges.
 
 ## 2. Get the PR green
 

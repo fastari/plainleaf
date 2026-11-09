@@ -1,7 +1,12 @@
 # Contributing
 
-Thanks for helping. I maintain Plainleaf for my own sites, so I can't promise to merge
-everything or answer quickly, but I read every pull request.
+I maintain Plainleaf for my own sites, so pull requests and issues are open to
+collaborators only. If you want changes, fork it: the GPL allows it, and the
+[Name](README.md#name) section asks only that you give your copy a different name.
+Security problems are the exception: please report them privately (see
+[SECURITY.md](SECURITY.md)).
+
+The rest of this page is how changes are made here, and is useful if you keep a fork.
 
 ## Good pull requests
 
@@ -32,7 +37,7 @@ everything or answer quickly, but I read every pull request.
 
 Don't bump the version in a PR. Merging releases automatically; the maintainer adds the
 release label (`release:patch`, `release:minor`, `release:major` or `release:skip`).
-PRs from outside the repo run their checks once the maintainer approves the run.
+Only collaborators can open pull requests; only the maintainer merges.
 
 ## Using Claude Code
 

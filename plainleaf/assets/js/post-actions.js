@@ -17,7 +17,13 @@
 		return;
 	}
 	var labels = JSON.parse( root.getAttribute( 'data-labels' ) || '{}' );
-	var icons = JSON.parse( root.getAttribute( 'data-icons' ) || '{}' );
+
+	// The SVG icons come as <template> elements next to the buttons; clone them
+	// rather than building HTML from strings.
+	function icon( name ) {
+		var tpl = root.querySelector( 'template[data-pl-icon="' + name + '"]' );
+		return tpl ? tpl.content.cloneNode( true ) : document.createDocumentFragment();
+	}
 
 	/* ---------- Share ---------- */
 	var shareBtn = root.querySelector( '[data-pl-share]' );
@@ -116,7 +122,7 @@
 			if ( ! button ) {
 				return;
 			}
-			button.innerHTML = playing ? icons.pause : icons.play;
+			button.replaceChildren( icon( playing ? 'pause' : 'play' ) );
 			button.setAttribute( 'aria-label', playing ? labels.pause : labels.listen );
 			button.classList.toggle( 'is-playing', playing );
 		} );
@@ -159,7 +165,7 @@
 		parts.range.setAttribute( 'aria-label', labels.seek );
 		parts.speed.setAttribute( 'aria-label', labels.speed + ': 1×' );
 		parts.close.setAttribute( 'aria-label', labels.close );
-		parts.close.innerHTML = icons.close;
+		parts.close.replaceChildren( icon( 'close' ) );
 
 		parts.toggle.addEventListener( 'click', toggle );
 		parts.range.addEventListener( 'input', function () {

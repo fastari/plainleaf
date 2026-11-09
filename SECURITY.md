@@ -6,8 +6,8 @@ Please report security issues **privately** through GitHub:
 [Report a vulnerability](https://github.com/fastari/plainleaf/security/advisories/new)
 (Security tab > Report a vulnerability).
 
-Include what's affected, steps to reproduce, and the impact you expect. Please don't open
-a public issue or pull request for a vulnerability until a fix is released.
+Include what's affected, steps to reproduce, and the impact you expect. Please don't share it
+publicly until a fix is released.
 
 This is a theme I maintain for my own sites, so there's no guaranteed response time, but
 security reports come first. I'll confirm the report, work on a fix, and credit you in the
