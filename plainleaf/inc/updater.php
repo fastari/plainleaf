@@ -163,6 +163,23 @@ function plainleaf_updater_guard_download( $reply, $package, $upgrader = null, $
 add_filter( 'upgrader_pre_download', 'plainleaf_updater_guard_download', 10, 4 );
 
 /**
+ * "Check again" on Dashboard > Updates asks GitHub right away instead of using
+ * the 6-hour cache. Runs just before WordPress's own theme check on that page.
+ * Clearing a cache changes nothing else, so no nonce is needed; the capability
+ * check keeps it to people who can update themes.
+ */
+function plainleaf_updater_force_check() {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only clears a cache; WordPress's own "Check again" link has no nonce.
+	if ( empty( $_GET['force-check'] ) || ! current_user_can( 'update_themes' ) ) {
+		return;
+	}
+	delete_site_transient( 'plainleaf_updater_latest' );
+	// WordPress skips its own theme check if the last one ran under a minute ago.
+	delete_site_transient( 'update_themes' );
+}
+add_action( 'load-update-core.php', 'plainleaf_updater_force_check', 9 );
+
+/**
  * Check again right after the theme is updated, so the next release is found.
  */
 function plainleaf_updater_clear_cache() {
