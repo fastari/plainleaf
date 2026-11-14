@@ -19,7 +19,7 @@
 	<p class="has-display-font-family has-large-font-size"></p>
 	<!-- /wp:paragraph -->
 	<!-- wp:paragraph {"fontFamily":"sans","fontSize":"small"} -->
-	<p class="has-sans-font-family has-small-font-size"><?php esc_html_e( 'Reply to the newsletter and share your answer.', 'plainleaf' ); ?></p>
+	<p class="has-sans-font-family has-small-font-size"><?php esc_html_e( 'Join the newsletter below and hit reply with your answer. I read every reply.', 'plainleaf' ); ?></p>
 	<!-- /wp:paragraph -->
 </div>
 <!-- /wp:group -->
